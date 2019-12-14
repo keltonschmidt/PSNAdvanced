@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/time.h>
 #include <string.h>
 #include "windows.h"
 #include "codesLIB.h"
@@ -70,11 +71,9 @@ string currentdate();
 
 
 int main() {
-	cout << "0";
     srand(time(NULL));
     
     int amount = 1, i = 0;
-    cout << "1";
 
 	cout << endl;
 	system("cls");
@@ -83,7 +82,7 @@ int main() {
 	/*****************************************************************************/
 	string date_ = currentdate();
     string date = date_;
-    
+	
 	string mydir;
     string mydir2;
     mydir = "Results";
@@ -92,7 +91,7 @@ int main() {
     mkdir(mydir2.c_str());
     
     fstream codici;
-	string path = "Results//" + date + "//AMAZON CODES.txt";
+	string path = "Results//" + date + "//PSN CODES.txt";
     codici.open(path.c_str(),  ios::out);
     /*****************************************************************************/
 	
@@ -113,6 +112,8 @@ int main() {
 int revealPattern() {
     int i = 0, tempN = 0;
     char tempC;
+    
+    fstream codici;
 
     for(; i < 12; i++) {
         if(i == 4 || i == 8) {
@@ -121,12 +122,15 @@ int revealPattern() {
         if(currentPattern[i] == 0) {
             tempN = rand() % 10;
             cout << tempN;
+            codici << tempN;
         } else {
             tempC = (rand() % 26) + 65;
             cout << tempC;
+            codici << tempC;
         }
     }
     cout << endl;
+    codici << endl;
 }
 
 int checkPattern() {
@@ -170,8 +174,8 @@ string currentdate()
 void readPatternArray() {
 	int i = 0, j = 0, k = 0, l = 0;
 	
-	cout << "Importing Pattern's Database..." << '\n' << endl;
-	cout << '\t' << "Current Database: " << '\t' << '\t' << "Generated Database: " << '\n' << endl;
+	//cout << "Importing Pattern's Database..." << '\n' << endl;
+	cout << '\t'<< '\t' << "Current Database: " << '\t' << '\t' << "Generated Database: " << '\n' << endl;
 	
 	
 	for(i = 0; i < 18; i++) {
@@ -271,6 +275,7 @@ void showMenu() {
 		case 2:															/*   select column   */
 			cout << "Insert column number (0 = LEFT, 1 = RIGHT): ";
 			cin >> colNum;
+			
 			generateFromCol(colNum);
 			
 			break;
@@ -285,26 +290,6 @@ void showMenu() {
 			
 			break;
 	}
-}
-
-
-/********************************
- *	 	GENERATEFROMCHOOSE		*
- *								*
- *	GENERO TOT CODICI IN BASE 	*
- *	ALLA RICHIESTA DELL'UTENTE	*
- ********************************/
-
-int generateFromChoose(int rownum, int colnum) {
-	int amount = 0, i = 0;
-	
-	cout << "Insert Amount of codes: " << endl;
-	cin >> amount;
-	
-	while(i < amount) {
-        revealPattern();
-        i++;
-    }
 }
 
 
@@ -356,6 +341,16 @@ int generateFromCol(int colNum) {
 	cout << "Insert amount of codes: ";
 	cin >> amount;
 	
+	fstream codici;
+	string date_ = currentdate();
+    string date = date_;
+    
+	string path = "Results//" + date + "//PSN CODES.txt";
+    codici.open(path.c_str(),  ios::out);
+    
+	clock_t t1, t2;
+	t1 = clock();
+
 	if(colNum == 0) {
 		do {
 			cont++;
@@ -365,17 +360,21 @@ int generateFromCol(int colNum) {
 		
 		    for(i = 0; i < 12; i++) {
 		        if(i == 4 || i == 8) {
-		            cout << "-";
+		            //cout << "-";
+		            codici << "-";
 		        }
 		        if(currentPattern[i] == 0) {
 		            tempN = rand() % 10;
-		            cout << tempN;
+		            //cout << tempN;
+					codici << tempN;
 		        } else {
 		            tempC = (rand() % 26) + 65;
-		            cout << tempC;
+		            //cout << tempC;
+		            codici << tempC;
 		        }
 		    }
-		    cout << endl;
+		    //cout << endl;
+		    codici << endl;
 		    
 		    if(cont >= 18) {
 		    	cont = 0;
@@ -394,16 +393,20 @@ int generateFromCol(int colNum) {
 		    for(i = 0; i < 12; i++) {
 		        if(i == 4 || i == 8) {
 		            cout << "-";
+		            codici << "-";
 		        }
 		        if(currentPattern[i] == 0) {
 		            tempN = rand() % 10;
 		            cout << tempN;
+		            codici << tempN;
 		        } else {
 		            tempC = (rand() % 26) + 65;
 		            cout << tempC;
+		            codici << tempC;
 		        }
 		    }
 		    cout << endl;
+		    codici << endl;
 		    
 		    if(cont >= 18) {
 		    	cont = 0;
@@ -412,25 +415,40 @@ int generateFromCol(int colNum) {
 			
 		} while(j < amount);	
 	}
+	
+	t2 = clock();
+	cout << "Codes generated in : " << (t2-t1) / ((double)CLOCKS_PER_SEC) << "sec" << endl;
+	
 }
 
 int generateFromNum(int colNumber, int rowNumber) {
-	int rowCont = 0, i = 0, j = 0, k = 0, amount = 0;
+	int rowCont = 0, i = 0, j = 0, k = 0, amount = 0, cont = 0, tempN = 0;
+	char tempC;
 	
 	cout << "Insert amount of codes: ";
 	cin >> amount;
 	cout << endl;
 	
+	string date_ = currentdate();
+    string date = date_;
+    
+    fstream codici;
+	string path = "Results//" + date + "//PSN CODES.txt";
+    codici.open(path.c_str(),  ios::out);
+	
+	clock_t t1, t2;
+	t1 = clock();
+	
 	if(colNumber == 0) {
 		for(k = 0; k < 12; k++) {
 			if(k == 4 || k == 8) {
-           		cout << "-";
+           		//cout << "-";
 	        }
 	        if(patterns[rowNumber][k] == 0) {
-	            cout << "0";
+	            //cout << "0";
 	            currentPattern[k] = 0;
 	        } else {
-	            cout << "X";
+	            //cout << "X";
 	            currentPattern[k] = 1;
 	        }
 		}
@@ -439,13 +457,13 @@ int generateFromNum(int colNumber, int rowNumber) {
 	} else {
 		for(k = 0; k < 12; k++) {
 			if(k == 4 || k == 8) {
-           		cout << "-";
+           		//cout << "-";
 	        }
 	        if(secondPatternGroup[rowNumber][k] == 0) {
-	            cout << "0";
+	            //cout << "0";
 	            currentPattern[k] = 0;
 	        } else {
-	            cout << "X";
+	            //cout << "X";
 	            currentPattern[k] = 1;
 	        }
 		}
@@ -453,11 +471,36 @@ int generateFromNum(int colNumber, int rowNumber) {
 		i++;
 	}
 	
-	while(j < amount) {
-		revealPattern();
+	do {
+		cont++;
+	
+	    for(i = 0; i < 12; i++) {
+	        if(i == 4 || i == 8) {
+	            cout << "-";
+	            codici << "-";
+	        }
+	        if(currentPattern[i] == 0) {
+	            tempN = rand() % 10;
+	            cout << tempN;
+	            codici << tempN;
+	        } else {
+	            tempC = (rand() % 26) + 65;
+	            cout << tempC;
+	            codici << tempC;
+	        }
+	    }
+	    
+	    cout << endl;
+	    codici << endl;
+	    
+	    if(cont >= 18) {
+	    	cont = 0;
+		}
 		
 		j++;
-	}
+			
+	} while(j < amount);
 	
-	return 1;
+	t2 = clock();
+	cout << "Codes generated in : " << (t2-t1) / ((double)CLOCKS_PER_SEC) << "sec" << endl;
 }
