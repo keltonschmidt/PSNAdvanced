@@ -67,16 +67,24 @@ int revealPattern();
 int checkPattern();
 int generateFromCol(int colNumber);
 int generateFromNum(int colNumber, int rowNumber);
+void firstPartMenu();
 string currentdate();
 
 
 int main() {
+	system("title \"PSN ADVANCED GENERATOR\"");
     srand(time(NULL));
     
     int amount = 1, i = 0;
-
-	cout << endl;
-	system("cls");
+	
+	firstPartMenu();
+    readPatternArray();
+	showMenu();
+    getPattern();
+    checkPattern();
+    cout << endl;
+	
+	//system("cls");
 	
 	
 	/*****************************************************************************/
@@ -95,16 +103,6 @@ int main() {
     codici.open(path.c_str(),  ios::out);
     /*****************************************************************************/
 	
-    /*   TRASFORMO IL CONTENUTO DELLA MATRICE PATTERN E LA STAMPO A VIDEO INSIEME AL SET DI PATTERN GENERATI   */
-    readPatternArray();
-    
-    /*   STAMPO A VIDEO IL MENU DI SCELTA CON LE OPZIONI   */
-    showMenu();
-
-    getPattern();
-    checkPattern();
-    cout << endl;
-
     return 1;
 }
 
@@ -256,40 +254,54 @@ void generateRand() {
  ********************************/
 
 void showMenu() {
-	int select = 0, colNum = 0, rowNum = 0, patternNum = 0;
-	cout << "         " << "----------------------------------------------------------------" << endl;
-	cout << "1) Generate a new Set of Patterns." << endl;
-	cout << "2) Select a Column." << endl;
-	cout << "3) Select a Pattern." << endl;
+	int select, colNum = 0, rowNum = 0, patternNum = 0;
 	
-	cin >> select;
-	switch (select) {
-		case 1:
-			system("cls");
-			getPattern();
-			readPatternArray();
-			showMenu();
+	do {		
+		cout << "         " << "----------------------------------------------------------------" << endl;
+		cout << "1) Generate a new Set of Patterns." << endl;
+		cout << "2) Select a Column." << endl;
+		cout << "3) Select a Pattern." << endl;
+	
+	
+		cin >> select;
+	
+		
+		switch (select) {
+			case 1:
+				system("cls");
+				firstPartMenu();
+				getPattern();
+				readPatternArray();
+				showMenu();
+				
+				break;
+				
+			case 2:															/*   select column   */
+				do {
+					cout << "Insert column number (0 = LEFT, 1 = RIGHT): ";
+					cin >> colNum;
+				} while(colNum > 1);
+				break;
+				
+			case 3:															/*   select pattern   */
+				cout << "Insert column number (0 = LEFT, 1 = RIGHT): ";
+				cin >> colNum;
+				cout << "Insert row number: ";
+				cin >> rowNum;
+				
+				generateFromNum(colNum, rowNum);
+				break;
 			
-			break;
-			
-		case 2:															/*   select column   */
-			cout << "Insert column number (0 = LEFT, 1 = RIGHT): ";
-			cin >> colNum;
-			
-			generateFromCol(colNum);
-			
-			break;
-			
-		case 3:															/*   select pattern   */
-			cout << "Insert column number (0 = LEFT, 1 = RIGHT): ";
-			cin >> colNum;
-			cout << "Insert row number: ";
-			cin >> rowNum;
-			
-			generateFromNum(colNum, rowNum);
-			
-			break;
-	}
+			default:
+				select = 8;
+				system("cls");
+				getPattern();
+				readPatternArray();
+				showMenu();
+				break;
+		}
+	
+	} while((select < 0) && (select > 4));
 }
 
 
@@ -418,6 +430,7 @@ int generateFromCol(int colNum) {
 	
 	t2 = clock();
 	cout << "Codes generated in : " << (t2-t1) / ((double)CLOCKS_PER_SEC) << "sec" << endl;
+	cout << "You can find them in the following path: " << path << endl;
 	
 }
 
@@ -503,4 +516,12 @@ int generateFromNum(int colNumber, int rowNumber) {
 	
 	t2 = clock();
 	cout << "Codes generated in : " << (t2-t1) / ((double)CLOCKS_PER_SEC) << "sec" << endl;
+}
+
+void firstPartMenu() {
+	cout << '\t' << "PSN ADVANCED GENERATOR - ALGORITHM AND CODES STUDIED WITH AI." << endl;
+	cout << '\t'<< '\t' << '\t' << "   " << "CODED BY KELTON SCHMIDT"<< endl;
+	cout << '\t'<< '\t' << '\t' << "   " <<"THIS PRODUCT IS INTENDED"<< endl;
+	cout << '\t'<< '\t' << '\t' <<"FOR EDUCATIONAL PURPOSES ONLY"<< endl;
+	cout << endl;
 }
